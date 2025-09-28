@@ -140,5 +140,3 @@ float GetAxis(SDL_Event *e, SDL_Scancode negative, SDL_Scancode positive) {
     }
     return result;
 }
-
-
