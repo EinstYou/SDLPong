@@ -1,25 +1,45 @@
 #include <iostream>
+#include <vector>
 #include <SDL3/SDL.h>
 #include <SDL3/SDL_main.h>
 
-class Renderer {
-public:
-    static void Render() {
-
-    }
-};
-
-class GameObject : public Renderer {
-public:
-    SDL_FRect transform;
-    GameObject(SDL_FRect rect) {
-        this->transform = rect;
-    }
-
-};
-
 SDL_Window* window;
 SDL_Renderer* renderer;
+
+class Rectangle {
+public:
+    SDL_FRect rect;
+    int r;
+    int g;
+    int b;
+    int a;
+    Rectangle(float x, float y, float w, float h, int r, int g, int b, int a) {
+        this->rect.x = x;
+        this->rect.y = y;
+        this->rect.w = w;
+        this->rect.h = h;
+
+        this->r = r;
+        this->g = g;
+        this->b = b;
+        this->a = a;
+    }
+};
+static std::vector<Rectangle> rects;
+class GameObject {
+public:
+    static void CreateObject(Rectangle rect) {
+        rects.push_back(rect);
+    }
+    static void RenderObjects() {
+        for (auto &rect : rects) {
+            SDL_SetRenderDrawColor(renderer, rect.r, rect.g, rect.b, rect.a);
+            SDL_RenderFillRect(renderer, &rect.rect);
+        }
+    }
+};
+
+
 
 int width;
 int height;
@@ -56,16 +76,9 @@ int main(int argc, char *argv[]) {
 
     running = true;
 
-    SDL_FRect p1;
-    p1.h = 100;
-    p1.w = 20;
-    p1.x = 0 + 20;
-    p1.y = (float)(height / 2) - (p1.h / 2);
-    float p1VelocityY;
+    Rectangle p1 = Rectangle(100, 100, 50, 50, 0, 100, 0, 100);
 
-    float p1Bottom = p1.y + p1.h;
-    float p1Top = p1.y;
-
+    GameObject::CreateObject(p1);
 
 
     SDL_FRect p2;
@@ -93,30 +106,16 @@ int main(int argc, char *argv[]) {
 
 
 
-        p1Bottom = p1.y + p1.h;
-        p1Top = p1.y;
 
-        if (p1Top < 0) {
-            p1Top = 0;
-            p1.y = p1Top;
-        }
-        else if (p1Bottom > (float)height) {
-            p1Bottom = (float)height;
-            p1.y = p1Bottom - p1.h;
-        }
-
-        p1VelocityY = direction * speed ;
-        p1.y += p1VelocityY * (float)deltaTime;
-
-
-        Renderer::Render();
 
         //Rendering
+
+
         SDL_SetRenderDrawColor(renderer, 150, 150, 150, 255);
         SDL_RenderClear(renderer);
 
-        SDL_SetRenderDrawColor(renderer, 150, 0, 0, 0);
-        SDL_RenderFillRect(renderer, &p1);
+        GameObject::RenderObjects();
+
 
         SDL_SetRenderDrawColor(renderer, 0, 0, 150, 0);
         SDL_RenderFillRect(renderer, &p2);
@@ -142,3 +141,5 @@ float GetAxis(SDL_Event *e, SDL_Scancode negative, SDL_Scancode positive) {
     }
     return result;
 }
+
+
