@@ -77,7 +77,6 @@ int main(int argc, char *argv[]) {
     running = true;
 
     Rectangle p1 = Rectangle(100, 100, 50, 50, 0, 100, 0, 100);
-
     GameObject::CreateObject(p1);
 
 
