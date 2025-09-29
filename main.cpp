@@ -6,52 +6,36 @@
 SDL_Window* window;
 SDL_Renderer* renderer;
 
-class Rectangle {
-public:
-    SDL_FRect rect;
-    int r;
-    int g;
-    int b;
-    int a;
-    Rectangle(float x, float y, float w, float h, int r, int g, int b, int a) {
-        this->rect.x = x;
-        this->rect.y = y;
-        this->rect.w = w;
-        this->rect.h = h;
-
-        this->r = r;
-        this->g = g;
-        this->b = b;
-        this->a = a;
-    }
-};
-static std::vector<Rectangle> rects;
-class GameObject {
-public:
-    static void CreateObject(Rectangle rect) {
-        rects.push_back(rect);
-    }
-    static void RenderObjects() {
-        for (auto &rect : rects) {
-            SDL_SetRenderDrawColor(renderer, rect.r, rect.g, rect.b, rect.a);
-            SDL_RenderFillRect(renderer, &rect.rect);
-        }
-    }
-};
-
-
 
 int width;
 int height;
+
 bool running;
-
-float speed = 500;
-
 double deltaTime;
 
-float direction = 0;
-
 float GetAxis(SDL_Event *e, SDL_Scancode negative, SDL_Scancode positive);
+
+class Player {
+    private:
+    SDL_FRect rect;
+    public:
+    Player(float x, float y, float w, float h) {
+        rect.x = x;
+        rect.y = y;
+        rect.w = w;
+        rect.h = h;
+    }
+    void RenderPlayer(Uint8 r, Uint8 g, Uint8 b, Uint8 a) {
+        SDL_SetRenderDrawColor(renderer, r, g, b, a);
+        SDL_RenderFillRect(renderer, &rect);
+    }
+    void MoveX(float value) {
+        rect.x += value;
+    }
+    void MoveY(float value) {
+        rect.y += value;
+    }
+};
 
 int main(int argc, char *argv[]) {
 
@@ -74,20 +58,14 @@ int main(int argc, char *argv[]) {
         return 1;
     }
 
-    running = true;
+    Player p1 = Player(100, 100, 100, 100);
+    float direction;
+    float speed = 500;
+    float velocity;
 
-    Rectangle p1 = Rectangle(100, 100, 50, 50, 0, 100, 0, 100);
-    GameObject::CreateObject(p1);
 
-
-    SDL_FRect p2;
-    p2.h = 100;
-    p2.w = 20;
-    p2.x = width - p2.w - 20;
-    p2.y = (float)(height / 2) - (p2.h / 2);
-    float p2VelocityY;
     Uint64 currentFrame = SDL_GetPerformanceCounter();
-
+    running = true;
     while (running) {
 
 
@@ -103,21 +81,14 @@ int main(int argc, char *argv[]) {
             direction = GetAxis(&e, SDL_SCANCODE_UP, SDL_SCANCODE_DOWN);
         }
 
-
-
-
+        velocity = speed * direction;
+        p1.MoveY(velocity * deltaTime);
 
         //Rendering
-
-
         SDL_SetRenderDrawColor(renderer, 150, 150, 150, 255);
         SDL_RenderClear(renderer);
 
-        GameObject::RenderObjects();
-
-
-        SDL_SetRenderDrawColor(renderer, 0, 0, 150, 0);
-        SDL_RenderFillRect(renderer, &p2);
+        p1.RenderPlayer(200,0,0,255);
 
         SDL_RenderPresent(renderer);
     }
