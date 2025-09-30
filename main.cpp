@@ -15,25 +15,33 @@ double deltaTime;
 
 float GetAxis(SDL_Event *e, SDL_Scancode negative, SDL_Scancode positive);
 
+class Vector2 {
+public:
+    float x;
+    float y;
+    Vector2(float x, float y) {
+        this->x = x;
+        this->y = y;
+    }
+};
+
 class Player {
     private:
     SDL_FRect rect;
     public:
-    Player(float x, float y, float w, float h) {
-        rect.x = x;
-        rect.y = y;
-        rect.w = w;
-        rect.h = h;
+    Player(Vector2 position, Vector2 scale) {
+        rect.x = position.x;
+        rect.y = position.y;
+        rect.w = scale.x;
+        rect.h = scale.y;
     }
     void RenderPlayer(Uint8 r, Uint8 g, Uint8 b, Uint8 a) {
         SDL_SetRenderDrawColor(renderer, r, g, b, a);
         SDL_RenderFillRect(renderer, &rect);
     }
-    void MoveX(float value) {
-        rect.x += value;
-    }
-    void MoveY(float value) {
-        rect.y += value;
+    void Move(Vector2 v) {
+        rect.x += v.x;
+        rect.y += v.y;
     }
 };
 
@@ -58,7 +66,7 @@ int main(int argc, char *argv[]) {
         return 1;
     }
 
-    Player p1 = Player(100, 100, 100, 100);
+    Player p1 = Player(Vector2(100, 100 ), Vector2(50, 50));
     float direction;
     float speed = 500;
     float velocity;
@@ -82,7 +90,7 @@ int main(int argc, char *argv[]) {
         }
 
         velocity = speed * direction;
-        p1.MoveY(velocity * deltaTime);
+        p1.Move(Vector2(0.0f, velocity * deltaTime));
 
         //Rendering
         SDL_SetRenderDrawColor(renderer, 150, 150, 150, 255);
