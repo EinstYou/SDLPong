@@ -29,6 +29,7 @@ class Player {
     private:
     SDL_FRect rect;
     public:
+    float velocity;
     Player(Vector2 position, Vector2 scale) {
         rect.x = position.x;
         rect.y = position.y;
@@ -52,23 +53,40 @@ class Player {
     }
 };
 
-class BoxCollision2D {
+class BoxTrigger2D {
     public:
-    static bool IsColliding(SDL_FRect f1, SDL_FRect f2) {
-        float f1Bottom = f1.y + f1.h;
-        float f1Top = f1.y;
-        float f1Left = f1.x;
-        float f1Right = f1.x + f1.w;
-        float f2Bottom = f2.y + f2.h;
-        float f2Top = f2.y;
-        float f2Left = f2.x;
-        float f2Right = f2.x + f2.w;
-        if (f1Bottom > f2Top && f1Top < f2Bottom && f1Left < f2Right && f1Right > f2Left) {
+    float f1Bottom;
+    float f1Top;
+    float f1Left;
+    float f1Right;
+    float f2Bottom;
+    float f2Top;
+    float f2Left;
+    float f2Right;
+
+    BoxTrigger2D(Player p1, Player p2) {
+        f1Bottom = p1.GetRect().y + p1.GetRect().h;
+        f1Top = p1.GetRect().y;
+        f1Left = p1.GetRect().x;
+        f1Right = p1.GetRect().x + p1.GetRect().w;
+        f2Bottom = p2.GetRect().y + p2.GetRect().h;
+        f2Top = p2.GetRect().y;
+        f2Left = p2.GetRect().x;
+        f2Right = p2.GetRect().x + p2.GetRect().w;
+    }
+    bool IsTrigger(Player p1, Player p2) {
+        if (f1Bottom >= f2Top && f1Top <= f2Bottom && f1Left <= f2Right && f1Right >= f2Left) {
             return true;
         }
         return false;
     }
 };
+
+class BoxCollision2D : BoxTrigger2D {
+    public:
+
+};
+
 
 int main(int argc, char *argv[]) {
 
@@ -94,7 +112,6 @@ int main(int argc, char *argv[]) {
     Player p1 = Player(Vector2(100, 100 ), Vector2(50, 50));
     float direction;
     float speed = 500;
-    float velocity;
     Player p2 = Player(Vector2(100, 300), Vector2(50, 50));
 
 
@@ -115,10 +132,9 @@ int main(int argc, char *argv[]) {
             direction = GetAxis(&e, SDL_SCANCODE_UP, SDL_SCANCODE_DOWN);
         }
 
+        p1.velocity = speed * direction;
+        p1.Move(Vector2(0.0f, p1.velocity * deltaTime));
 
-
-        velocity = speed * direction;
-        p1.Move(Vector2(0.0f, velocity * deltaTime));
 
         //Rendering
         SDL_SetRenderDrawColor(renderer, 150, 150, 150, 255);
