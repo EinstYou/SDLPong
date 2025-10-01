@@ -63,7 +63,7 @@ class BoxCollision2D {
         float f2Top = f2.y;
         float f2Left = f2.x;
         float f2Right = f2.x + f2.w;
-        if (f1Bottom >= f2Top && f1Top <= f2Bottom && f1Left <= f2Right && f1Right >= f2Left) {
+        if (f1Bottom > f2Top && f1Top < f2Bottom && f1Left < f2Right && f1Right > f2Left) {
             return true;
         }
         return false;
@@ -114,6 +114,8 @@ int main(int argc, char *argv[]) {
             if (e.type == SDL_EVENT_QUIT) running = false;
             direction = GetAxis(&e, SDL_SCANCODE_UP, SDL_SCANCODE_DOWN);
         }
+
+
 
         velocity = speed * direction;
         p1.Move(Vector2(0.0f, velocity * deltaTime));
