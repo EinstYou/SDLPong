@@ -43,6 +43,31 @@ class Player {
         rect.x += v.x;
         rect.y += v.y;
     }
+    void SetPosition(Vector2 position) {
+        rect.x = position.x;
+        rect.y = position.y;
+    }
+    SDL_FRect GetRect() {
+        return rect;
+    }
+};
+
+class BoxCollision2D {
+    public:
+    static bool IsColliding(SDL_FRect f1, SDL_FRect f2) {
+        float f1Bottom = f1.y + f1.h;
+        float f1Top = f1.y;
+        float f1Left = f1.x;
+        float f1Right = f1.x + f1.w;
+        float f2Bottom = f2.y + f2.h;
+        float f2Top = f2.y;
+        float f2Left = f2.x;
+        float f2Right = f2.x + f2.w;
+        if (f1Bottom >= f2Top && f1Top <= f2Bottom && f1Left <= f2Right && f1Right >= f2Left) {
+            return true;
+        }
+        return false;
+    }
 };
 
 int main(int argc, char *argv[]) {
@@ -70,6 +95,7 @@ int main(int argc, char *argv[]) {
     float direction;
     float speed = 500;
     float velocity;
+    Player p2 = Player(Vector2(100, 300), Vector2(50, 50));
 
 
     Uint64 currentFrame = SDL_GetPerformanceCounter();
@@ -97,6 +123,7 @@ int main(int argc, char *argv[]) {
         SDL_RenderClear(renderer);
 
         p1.RenderPlayer(200,0,0,255);
+        p2.RenderPlayer(0,0,255,255);
 
         SDL_RenderPresent(renderer);
     }
