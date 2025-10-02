@@ -91,9 +91,11 @@ int main(int argc, char *argv[]) {
         return 1;
     }
 
-    GameObject p1 = GameObject(Vector2(100, 175 ), Vector2(20, 100));
+    GameObject p1 = GameObject(Vector2(20, 175 ), Vector2(20, 100));
     float direction;
     float speed = 500;
+    GameObject topWall = GameObject(Vector2(0, -50), Vector2(width, 50));
+    GameObject bottomWall = GameObject(Vector2(0, height), Vector2(height, 50));
 
 
 
