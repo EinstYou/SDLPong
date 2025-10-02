@@ -25,12 +25,12 @@ public:
     }
 };
 
-class Player {
+class GameObject {
     private:
     SDL_FRect rect;
     public:
     float velocity;
-    Player(Vector2 position, Vector2 scale) {
+    GameObject(Vector2 position, Vector2 scale) {
         rect.x = position.x;
         rect.y = position.y;
         rect.w = scale.x;
@@ -53,38 +53,20 @@ class Player {
     }
 };
 
-class BoxTrigger2D {
-    public:
-    float f1Bottom;
-    float f1Top;
-    float f1Left;
-    float f1Right;
-    float f2Bottom;
-    float f2Top;
-    float f2Left;
-    float f2Right;
+class BoxCollision2D {
+public:
+    static bool IsColliding(GameObject p1, GameObject p2) {
+        float p1Bottom = p1.GetRect().y + p1.GetRect().h;
+        float p1Top = p1.GetRect().y;
+        float p1Left = p1.GetRect().x;
+        float p1Right = p1.GetRect().x + p1.GetRect().w;
 
-    BoxTrigger2D(Player p1, Player p2) {
-        f1Bottom = p1.GetRect().y + p1.GetRect().h;
-        f1Top = p1.GetRect().y;
-        f1Left = p1.GetRect().x;
-        f1Right = p1.GetRect().x + p1.GetRect().w;
-        f2Bottom = p2.GetRect().y + p2.GetRect().h;
-        f2Top = p2.GetRect().y;
-        f2Left = p2.GetRect().x;
-        f2Right = p2.GetRect().x + p2.GetRect().w;
+        float p2Bottom = p2.GetRect().y + p2.GetRect().h;
+        float p2Top = p2.GetRect().y;
+        float p2Left = p2.GetRect().x;
+        float p2Right = p2.GetRect().x + p2.GetRect().w;
+        return p1Bottom >= p2Top && p1Top <= p2Bottom && p1Left <= p2Right && p1Right >= p2Left;
     }
-    bool IsTrigger(Player p1, Player p2) {
-        if (f1Bottom >= f2Top && f1Top <= f2Bottom && f1Left <= f2Right && f1Right >= f2Left) {
-            return true;
-        }
-        return false;
-    }
-};
-
-class BoxCollision2D : BoxTrigger2D {
-    public:
-
 };
 
 
@@ -109,10 +91,10 @@ int main(int argc, char *argv[]) {
         return 1;
     }
 
-    Player p1 = Player(Vector2(100, 100 ), Vector2(50, 50));
+    GameObject p1 = GameObject(Vector2(100, 175 ), Vector2(20, 100));
     float direction;
     float speed = 500;
-    Player p2 = Player(Vector2(100, 300), Vector2(50, 50));
+
 
 
     Uint64 currentFrame = SDL_GetPerformanceCounter();
@@ -141,7 +123,6 @@ int main(int argc, char *argv[]) {
         SDL_RenderClear(renderer);
 
         p1.RenderPlayer(200,0,0,255);
-        p2.RenderPlayer(0,0,255,255);
 
         SDL_RenderPresent(renderer);
     }
