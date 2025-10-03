@@ -20,14 +20,14 @@ class Vector2 {
 public:
     float x;
     float y;
-    float normalX;
-    float normalY;
     Vector2(float x, float y) {
         this->x = x;
         this->y = y;
-        float hipo = sqrt(pow(x, 2) + pow(y, 2));
-        normalX = x / hipo;
-        normalY = y / hipo;
+    }
+    void Normalize() {
+        float hipo = sqrt(x * x + y * y);
+        x /= hipo;
+        y /= hipo;
     }
 };
 
@@ -103,7 +103,7 @@ int main(int argc, char *argv[]) {
     GameObject topWall = GameObject(Vector2(0, -50), Vector2(width, 50));
     GameObject bottomWall = GameObject(Vector2(0, height), Vector2(width, 50));
 
-
+    GameObject ball = GameObject(Vector2(width / 2 - 10, height / 2 - 10), Vector2(10, 10));
 
     Uint64 currentFrame = SDL_GetPerformanceCounter();
     running = true;
@@ -122,11 +122,11 @@ int main(int argc, char *argv[]) {
             direction = GetAxis(&e, SDL_SCANCODE_UP, SDL_SCANCODE_DOWN);
         }
 
-        Vector2 pos = Vector2(p1.GetRect().x, p1.GetRect().y);
+        Vector2 oldPosP1 = Vector2(p1.GetRect().x, p1.GetRect().y);
         p1.velocity = speed * direction;
         p1.Move(Vector2(0.0f, p1.velocity * deltaTime));
         if (BoxCollision2D::IsColliding(p1, bottomWall) || BoxCollision2D::IsColliding(p1, topWall)) {
-            p1.SetPosition(pos);
+            p1.SetPosition(oldPosP1);
         }
 
         //Rendering
@@ -134,12 +134,14 @@ int main(int argc, char *argv[]) {
         SDL_RenderClear(renderer);
 
         p1.RenderObject(200,0,0,255);
+        ball.RenderObject(255, 255, 0, 255);
 
         SDL_RenderPresent(renderer);
     }
 
-
-
+    SDL_DestroyRenderer(renderer);
+    SDL_DestroyWindow(window);
+    SDL_Quit();
     return 0;
 }
 
