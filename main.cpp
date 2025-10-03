@@ -31,6 +31,17 @@ public:
     }
 };
 
+class RandomGenerator {
+public:
+    static int Generate(int maxValue){
+        int random = SDL_rand(maxValue + 1);
+        int negOrPos = SDL_rand(2);
+        if(negOrPos == 1) {
+            return random;
+        }
+        return -random;
+    }
+};
 class GameObject {
     private:
     SDL_FRect rect;
@@ -100,10 +111,14 @@ int main(int argc, char *argv[]) {
     GameObject p1 = GameObject(Vector2(20, 175 ), Vector2(20, 100));
     float direction;
     float speed = 500;
-    GameObject topWall = GameObject(Vector2(0, -50), Vector2(width, 50));
-    GameObject bottomWall = GameObject(Vector2(0, height), Vector2(width, 50));
+    GameObject topWall = GameObject(Vector2(0, -50), Vector2((float)width, 50));
+    GameObject bottomWall = GameObject(Vector2(0, (float)height), Vector2((float)width, 50));
 
-    GameObject ball = GameObject(Vector2(width / 2 - 10, height / 2 - 10), Vector2(10, 10));
+    GameObject ball = GameObject(Vector2((float)width / 2 - 10, (float)height / 2 - 10), Vector2(15, 15));
+    Vector2 ballDirection = Vector2((float)(RandomGenerator::Generate(5)), (float)(RandomGenerator::Generate(5)));
+    ballDirection.Normalize();
+    float ballSpeed = 300;
+    Vector2 ballVelocity = Vector2(0,0);
 
     Uint64 currentFrame = SDL_GetPerformanceCounter();
     running = true;
@@ -112,7 +127,7 @@ int main(int argc, char *argv[]) {
 
         //Calculate DeltaTime
         Uint64 nextFrame =  SDL_GetPerformanceCounter();
-        deltaTime = (double)(nextFrame - currentFrame) / SDL_GetPerformanceFrequency();
+        deltaTime = (double)(nextFrame - currentFrame) / (double)SDL_GetPerformanceFrequency();
         currentFrame = nextFrame;
 
         //Handle event
@@ -124,11 +139,15 @@ int main(int argc, char *argv[]) {
 
         Vector2 oldPosP1 = Vector2(p1.GetRect().x, p1.GetRect().y);
         p1.velocity = speed * direction;
-        p1.Move(Vector2(0.0f, p1.velocity * deltaTime));
+        p1.Move(Vector2(0.0f, (float)p1.velocity * deltaTime));
         if (BoxCollision2D::IsColliding(p1, bottomWall) || BoxCollision2D::IsColliding(p1, topWall)) {
             p1.SetPosition(oldPosP1);
         }
 
+        ballVelocity = Vector2(ballDirection.x * ballSpeed, ballDirection.y * ballSpeed);
+        ball.Move(Vector2((float)ballVelocity.x * deltaTime, (float)ballVelocity.y * deltaTime));
+
+        std::cout << RandomGenerator::Generate(100) << std::endl;
         //Rendering
         SDL_SetRenderDrawColor(renderer, 150, 150, 150, 255);
         SDL_RenderClear(renderer);
