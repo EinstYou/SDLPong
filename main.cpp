@@ -2,6 +2,7 @@
 #include <vector>
 #include <SDL3/SDL.h>
 #include <SDL3/SDL_main.h>
+#include <cmath>
 
 SDL_Window* window;
 SDL_Renderer* renderer;
@@ -19,9 +20,14 @@ class Vector2 {
 public:
     float x;
     float y;
+    float normalX;
+    float normalY;
     Vector2(float x, float y) {
         this->x = x;
         this->y = y;
+        float hipo = sqrt(pow(x, 2) + pow(y, 2));
+        normalX = x / hipo;
+        normalY = y / hipo;
     }
 };
 
