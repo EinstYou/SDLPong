@@ -36,7 +36,7 @@ class GameObject {
         rect.w = scale.x;
         rect.h = scale.y;
     }
-    void RenderPlayer(Uint8 r, Uint8 g, Uint8 b, Uint8 a) {
+    void RenderObject(Uint8 r, Uint8 g, Uint8 b, Uint8 a) {
         SDL_SetRenderDrawColor(renderer, r, g, b, a);
         SDL_RenderFillRect(renderer, &rect);
     }
@@ -95,7 +95,7 @@ int main(int argc, char *argv[]) {
     float direction;
     float speed = 500;
     GameObject topWall = GameObject(Vector2(0, -50), Vector2(width, 50));
-    GameObject bottomWall = GameObject(Vector2(0, height), Vector2(height, 50));
+    GameObject bottomWall = GameObject(Vector2(0, height), Vector2(width, 50));
 
 
 
@@ -116,15 +116,18 @@ int main(int argc, char *argv[]) {
             direction = GetAxis(&e, SDL_SCANCODE_UP, SDL_SCANCODE_DOWN);
         }
 
+        Vector2 pos = Vector2(p1.GetRect().x, p1.GetRect().y);
         p1.velocity = speed * direction;
         p1.Move(Vector2(0.0f, p1.velocity * deltaTime));
-
+        if (BoxCollision2D::IsColliding(p1, bottomWall) || BoxCollision2D::IsColliding(p1, topWall)) {
+            p1.SetPosition(pos);
+        }
 
         //Rendering
         SDL_SetRenderDrawColor(renderer, 150, 150, 150, 255);
         SDL_RenderClear(renderer);
 
-        p1.RenderPlayer(200,0,0,255);
+        p1.RenderObject(200,0,0,255);
 
         SDL_RenderPresent(renderer);
     }
