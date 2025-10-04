@@ -115,7 +115,7 @@ int main(int argc, char *argv[]) {
     GameObject bottomWall = GameObject(Vector2(0, (float)height), Vector2((float)width, 50));
 
     GameObject ball = GameObject(Vector2((float)width / 2 - 10, (float)height / 2 - 10), Vector2(15, 15));
-    Vector2 ballDirection = Vector2((float)(RandomGenerator::Generate(5)), (float)(RandomGenerator::Generate(5)));
+    Vector2 ballDirection = Vector2((float)(RandomGenerator::Generate(50)), (float)(RandomGenerator::Generate(30)));
     ballDirection.Normalize();
     float ballSpeed = 300;
     Vector2 ballVelocity = Vector2(0,0);
@@ -144,10 +144,18 @@ int main(int argc, char *argv[]) {
             p1.SetPosition(oldPosP1);
         }
 
+        Vector2  oldPosBall = Vector2(ball.GetRect().x, ball.GetRect().y);
         ballVelocity = Vector2(ballDirection.x * ballSpeed, ballDirection.y * ballSpeed);
         ball.Move(Vector2((float)ballVelocity.x * deltaTime, (float)ballVelocity.y * deltaTime));
 
-        std::cout << RandomGenerator::Generate(100) << std::endl;
+        if (BoxCollision2D::IsColliding(ball, bottomWall) || BoxCollision2D::IsColliding(ball, topWall)) {
+            ball.SetPosition(oldPosBall);
+            ballDirection.y *= -1;
+        }
+        else if (BoxCollision2D::IsColliding(ball, p1)) {
+            ball.SetPosition(oldPosBall);
+            ballDirection.x *= -1;
+        }
         //Rendering
         SDL_SetRenderDrawColor(renderer, 150, 150, 150, 255);
         SDL_RenderClear(renderer);
