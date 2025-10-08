@@ -25,15 +25,15 @@ public:
         this->y = y;
     }
     void Normalize() {
-        float hipo = sqrt(x * x + y * y);
-        x /= hipo;
-        y /= hipo;
+        float hypo = sqrt(x * x + y * y);
+        x /= hypo;
+        y /= hypo;
     }
 };
 
-class RandomGenerator {
+class RandomGenerator { 
 public:
-    static int Generate(int maxValue){
+    static int Generate(int maxValue) { //Generate a random number between -maxValue and maxvalue
         int random = SDL_rand(maxValue + 1);
         int negOrPos = SDL_rand(2);
         if(negOrPos == 1) {
@@ -108,9 +108,14 @@ int main(int argc, char *argv[]) {
         return 1;
     }
 
-    GameObject p1 = GameObject(Vector2(20, 175 ), Vector2(20, 100));
+    GameObject p1 = GameObject(Vector2(20, 175), Vector2(20, 100));
     float direction;
-    float speed = 500;
+    float speed = 300;
+
+    GameObject p2 = GameObject(Vector2(760, 175), Vector2(20, 100));
+    float p2Direction;
+    float p2Speed = 300;
+
     GameObject topWall = GameObject(Vector2(0, -50), Vector2((float)width, 50));
     GameObject bottomWall = GameObject(Vector2(0, (float)height), Vector2((float)width, 50));
 
@@ -144,6 +149,21 @@ int main(int argc, char *argv[]) {
             p1.SetPosition(oldPosP1);
         }
 
+        Vector2 p2OldPos = Vector2(p2.GetRect().x, p2.GetRect().y);
+        p2Direction = ball.GetRect().y - p2.GetRect().y -50;
+        if(p2Direction < 0){
+            p2Direction = -1;
+        }
+        else if(p2Direction > 0){
+            p2Direction = 1;
+        }
+        p2.velocity = p2Direction * p2Speed;
+        p2.Move(Vector2(0, p2.velocity * (float)deltaTime));
+        if(BoxCollision2D::IsColliding(p2, topWall) || BoxCollision2D::IsColliding(p2, bottomWall)){
+            p2.SetPosition(p2OldPos);
+        }
+
+
         Vector2  oldPosBall = Vector2(ball.GetRect().x, ball.GetRect().y);
         ballVelocity = Vector2(ballDirection.x * ballSpeed, ballDirection.y * ballSpeed);
         ball.Move(Vector2((float)ballVelocity.x * deltaTime, (float)ballVelocity.y * deltaTime));
@@ -152,15 +172,18 @@ int main(int argc, char *argv[]) {
             ball.SetPosition(oldPosBall);
             ballDirection.y *= -1;
         }
-        else if (BoxCollision2D::IsColliding(ball, p1)) {
+        else if (BoxCollision2D::IsColliding(ball, p1) || BoxCollision2D::IsColliding(ball, p2)) {
             ball.SetPosition(oldPosBall);
             ballDirection.x *= -1;
         }
+
+
         //Rendering
         SDL_SetRenderDrawColor(renderer, 150, 150, 150, 255);
         SDL_RenderClear(renderer);
 
-        p1.RenderObject(200,0,0,255);
+        p1.RenderObject(200, 0, 0, 255);
+        p2.RenderObject(0, 0, 255, 255);
         ball.RenderObject(255, 255, 0, 255);
 
         SDL_RenderPresent(renderer);
