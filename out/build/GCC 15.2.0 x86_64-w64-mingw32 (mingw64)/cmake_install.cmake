@@ -1,8 +1,8 @@
-# Install script for directory: C:/Users/uyani/Documents/Projects/New
+# Install script for directory: C:/Users/uyani/Documents/Projects/SDLPong
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
-  set(CMAKE_INSTALL_PREFIX "C:/Users/uyani/Documents/Projects/New/out/install/GCC 15.2.0 x86_64-w64-mingw32 (mingw64)")
+  set(CMAKE_INSTALL_PREFIX "C:/Users/uyani/Documents/Projects/SDLPong/out/install/GCC 15.2.0 x86_64-w64-mingw32 (mingw64)")
 endif()
 string(REGEX REPLACE "/$" "" CMAKE_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}")
 
@@ -40,7 +40,7 @@ endif()
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
 if(CMAKE_INSTALL_LOCAL_ONLY)
-  file(WRITE "C:/Users/uyani/Documents/Projects/New/out/build/GCC 15.2.0 x86_64-w64-mingw32 (mingw64)/install_local_manifest.txt"
+  file(WRITE "C:/Users/uyani/Documents/Projects/SDLPong/out/build/GCC 15.2.0 x86_64-w64-mingw32 (mingw64)/install_local_manifest.txt"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")
 endif()
 if(CMAKE_INSTALL_COMPONENT)
@@ -56,6 +56,6 @@ else()
 endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
-  file(WRITE "C:/Users/uyani/Documents/Projects/New/out/build/GCC 15.2.0 x86_64-w64-mingw32 (mingw64)/${CMAKE_INSTALL_MANIFEST}"
+  file(WRITE "C:/Users/uyani/Documents/Projects/SDLPong/out/build/GCC 15.2.0 x86_64-w64-mingw32 (mingw64)/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")
 endif()

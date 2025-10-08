@@ -72,7 +72,7 @@ rule CUSTOM_COMMAND
 # Rule for re-running cmake.
 
 rule RERUN_CMAKE
-  command = C:\msys64\mingw64\bin\cmake.exe --regenerate-during-build -SC:\Users\uyani\Documents\Projects\New -B"C:\Users\uyani\Documents\Projects\New\out\build\GCC 15.2.0 x86_64-w64-mingw32 (mingw64)"
+  command = C:\msys64\mingw64\bin\cmake.exe --regenerate-during-build -SC:\Users\uyani\Documents\Projects\SDLPong -B"C:\Users\uyani\Documents\Projects\SDLPong\out\build\GCC 15.2.0 x86_64-w64-mingw32 (mingw64)"
   description = Re-running CMake...
   generator = 1
 
