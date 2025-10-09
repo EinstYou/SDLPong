@@ -120,7 +120,7 @@ int main(int argc, char *argv[]) {
     GameObject bottomWall = GameObject(Vector2(0, (float)height), Vector2((float)width, 50));
 
     GameObject ball = GameObject(Vector2((float)width / 2 - 10, (float)height / 2 - 10), Vector2(15, 15));
-    Vector2 ballDirection = Vector2((float)(RandomGenerator::Generate(50)), (float)(RandomGenerator::Generate(30)));
+    Vector2 ballDirection = Vector2((float)(RandomGenerator::Generate(100)), (float)(RandomGenerator::Generate(50)));
     ballDirection.Normalize();
     float ballSpeed = 300;
     Vector2 ballVelocity = Vector2(0,0);
